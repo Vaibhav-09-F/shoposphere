@@ -9,7 +9,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String description;
     private Double price;
@@ -21,12 +20,13 @@ public class Product {
 
     public Product() {}
 
-    public Product(Long id, String name, String description, Double price, Integer stock) {
+    public Product(Long id, String name, String description, Double price, Integer stock, Category category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
+        this.category = category;
     }
 
     // Getters and Setters
@@ -49,4 +49,8 @@ public class Product {
     public Integer getStock() { return stock; }
 
     public void setStock(Integer stock) { this.stock = stock; }
+
+    public Category getCategory() { return category; }
+
+    public void setCategory(Category category) { this.category = category; }
 }

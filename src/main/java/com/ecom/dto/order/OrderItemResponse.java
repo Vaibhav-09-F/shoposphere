@@ -16,6 +16,10 @@ public class OrderItemResponse {
         this.price = price;
     }
 
+    public OrderItemResponse() {
+
+    }
+
     public Long getProductId() {
         return productId;
     }

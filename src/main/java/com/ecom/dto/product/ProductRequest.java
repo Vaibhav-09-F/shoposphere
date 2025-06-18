@@ -6,10 +6,11 @@ public class ProductRequest {
     private String description;
     private Double price;
     private Integer stock;
+    private Long categoryId;
 
     public ProductRequest() {}
 
-    public ProductRequest(String name, String description, Double price, Integer stock) {
+    public ProductRequest(String name, String description, Double price, Integer stock, Long categoryId) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -32,4 +33,8 @@ public class ProductRequest {
     public Integer getStock() { return stock; }
 
     public void setStock(Integer stock) { this.stock = stock; }
+
+    public Long getCategoryId() { return categoryId; }
+
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 }

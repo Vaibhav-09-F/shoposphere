@@ -1,6 +1,7 @@
 package com.ecom.service.impl;
 
 import com.ecom.dto.order.OrderItemResponse;
+import com.ecom.dto.order.OrderOverviewResponse;
 import com.ecom.dto.order.OrderResponse;
 import com.ecom.model.*;
 import com.ecom.repository.*;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -93,4 +95,37 @@ public class OrderServiceImpl implements OrderService {
                 order.getStatus(),
                 itemDTOs);
     }
+
+    @Override
+    public List<OrderOverviewResponse> getUserOrders(Long userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream().map(this::mapToOverviewResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderOverviewResponse> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(this::mapToOverviewResponse).collect(Collectors.toList());
+    }
+
+    private OrderOverviewResponse mapToOverviewResponse(Order order) {
+        OrderOverviewResponse response = new OrderOverviewResponse();
+        response.setOrderId(order.getId());
+        response.setStatus(order.getStatus().name());
+        response.setOrderDate(order.getOrderDate().toString());
+        response.setTotalAmount(order.getTotalAmount());
+        response.setUserEmail(order.getUser().getEmail());
+
+        List<OrderItemResponse> itemResponses = order.getItems().stream().map(item -> {
+            OrderItemResponse itemResp = new OrderItemResponse();
+            itemResp.setProductName(item.getProduct().getName());
+            itemResp.setQuantity(item.getQuantity());
+            itemResp.setPrice(item.getPrice());
+            return itemResp;
+        }).collect(Collectors.toList());
+
+        response.setItems(itemResponses);
+        return response;
+    }
+
 }

@@ -6,6 +6,7 @@ import com.ecom.exception.ResourceNotFoundException;
 import com.ecom.model.Category;
 import com.ecom.repository.CategoryRepository;
 import com.ecom.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +15,10 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+//    private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -48,5 +52,27 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         return responseList;
+    }
+
+    @Override
+    public Category saveCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category updateCategory(Long id, Category updatedCategory) {
+        Category existing = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        existing.setName(updatedCategory.getName());
+        return categoryRepository.save(existing);
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new RuntimeException("Category not found");
+        }
+        categoryRepository.deleteById(id);
     }
 }

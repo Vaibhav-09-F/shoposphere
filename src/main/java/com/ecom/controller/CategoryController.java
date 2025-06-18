@@ -2,7 +2,9 @@ package com.ecom.controller;
 
 import com.ecom.dto.category.CategoryRequest;
 import com.ecom.dto.category.CategoryResponse;
+import com.ecom.model.Category;
 import com.ecom.service.CategoryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,4 +33,21 @@ public class CategoryController {
     public List<CategoryResponse> getAllCategories() {
         return categoryService.getAllCategories();
     }
+
+    @PostMapping("/admin/add")
+    public Category addCategory(@RequestBody Category category) {
+        return categoryService.saveCategory(category);
+    }
+
+    @PutMapping("/admin/update/{id}")
+    public Category updateCategory(@PathVariable Long id, @RequestBody Category updated) {
+        return categoryService.updateCategory(id, updated);
+    }
+
+    @DeleteMapping("/admin/delete/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok("Category deleted successfully");
+    }
+
 }
