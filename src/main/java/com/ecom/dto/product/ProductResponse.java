@@ -1,5 +1,8 @@
 package com.ecom.dto.product;
 
+import com.ecom.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class ProductResponse {
 
     private Long id;
@@ -8,14 +11,26 @@ public class ProductResponse {
     private Double price;
     private Integer stock;
 
+    // ← NEW:
+    private Long   categoryId;
+    private String categoryName;
+
     public ProductResponse() {}
 
-    public ProductResponse(Long id, String name, String description, Double price, Integer stock) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.stock = stock;
+    public ProductResponse(Long id,
+                           String name,
+                           String description,
+                           Double price,
+                           Integer stock,
+                           Long categoryId,
+                           String categoryName) {
+        this.id           = id;
+        this.name         = name;
+        this.description  = description;
+        this.price        = price;
+        this.stock        = stock;
+        this.categoryId   = categoryId;
+        this.categoryName = categoryName;
     }
 
     // Getters and Setters
@@ -38,4 +53,12 @@ public class ProductResponse {
     public Integer getStock() { return stock; }
 
     public void setStock(Integer stock) { this.stock = stock; }
+
+    public Long getCategoryId() { return categoryId; }
+
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+
+    public String getCategoryName() { return categoryName; }
+
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 }

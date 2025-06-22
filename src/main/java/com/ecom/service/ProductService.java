@@ -11,14 +11,18 @@ public interface ProductService {
     ProductResponse getProductById(Long id);
     List<ProductResponse> getAllProducts();
 
-    List<Product> searchByName(String query);
-    List<Product> filterProducts(Long categoryId, Double minPrice, Double maxPrice, Boolean onlyInStock);
+    List<ProductResponse> searchByName(String query);
+    List<ProductResponse> filterProducts(Long categoryId,
+                                         Double minPrice,
+                                         Double maxPrice,
+                                         Boolean onlyInStock);
+
+    List<ProductResponse> getProductsByCategory(Long categoryId);
 
     Product saveProduct(Product product);
-    Product updateProduct(Long id, Product updatedProduct);
-
-    List<Product> getProductsByCategory(Long categoryId);
+    ProductResponse updateProduct(Long id, ProductRequest updated);
 
     void deleteProduct(Long id);
 
+    ProductResponse mapToResponse(Product product);
 }

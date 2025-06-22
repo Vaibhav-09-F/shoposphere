@@ -4,12 +4,19 @@ package com.ecom.dto.order;
 import java.util.List;
 
 public class OrderOverviewResponse {
-    private Long orderId;
+    private Long   orderId;
     private String status;
     private String orderDate;
     private Double totalAmount;
     private String userEmail;
     private List<OrderItemResponse> items;
+
+    public OrderOverviewResponse(Long id, String name, String string, Double totalAmount, String email, List<OrderItemResponse> items) {
+    }
+
+    public OrderOverviewResponse() {
+
+    }
 
     // Getters and setters
 

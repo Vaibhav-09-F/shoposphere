@@ -1,5 +1,6 @@
 package com.ecom.service.impl;
 
+import com.ecom.dto.cart.CartItemResponse;
 import com.ecom.model.CartItem;
 import com.ecom.model.Product;
 import com.ecom.model.User;
@@ -9,6 +10,7 @@ import com.ecom.repository.UserRepository;
 import com.ecom.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,24 +27,39 @@ public class CartServiceImpl implements CartService {
     private ProductRepository productRepository;
 
     @Override
-    public CartItem addToCart(Long userId, Long productId, int quantity) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        CartItem cartItem = new CartItem(user, product, quantity);
-        return cartItemRepository.save(cartItem);
+    public CartItemResponse addToCart(Long userId, Long productId, int quantity) {
+        CartItem item = new CartItem(
+                userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")),
+                productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")),
+                quantity
+        );
+        CartItem saved = cartItemRepository.save(item);
+        return mapToDto(saved);
     }
 
     @Override
-    public List<CartItem> getCartItems(Long userId) {
-        return cartItemRepository.findByUserId(userId);
+    @Transactional(readOnly = true)
+    public List<CartItemResponse> getCartItems(Long userId) {
+        return cartItemRepository.findByUserId(userId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
     @Override
+    @Transactional
     public void removeFromCart(Long userId, Long productId) {
         cartItemRepository.deleteByUserIdAndProductId(userId, productId);
+    }
+
+    // — Helper mapper —
+    private CartItemResponse mapToDto(CartItem item) {
+        return new CartItemResponse(
+                item.getId(),
+                item.getProduct().getId(),
+                item.getProduct().getName(),
+                item.getQuantity(),
+                item.getProduct().getPrice()
+        );
     }
 }

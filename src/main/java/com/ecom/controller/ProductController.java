@@ -5,6 +5,7 @@ import com.ecom.dto.product.ProductResponse;
 import com.ecom.model.Product;
 import com.ecom.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,13 +16,29 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    /**
+     * Maps a Product entity (with its Category) to a ProductResponse DTO.
+     */
+    private ProductResponse mapToResponse(Product p) {
+        Long catId   = null;
+        String catNm = null;
+        if (p.getCategory() != null) {
+            catId   = p.getCategory().getId();
+            catNm   = p.getCategory().getName();
+        }
+        return new ProductResponse(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                p.getStock(),
+                catId,
+                catNm
+        );
     }
 
-    @PostMapping
-    public ProductResponse createProduct(@RequestBody ProductRequest request) {
-        return productService.createProduct(request);
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/{id}")
@@ -34,41 +51,45 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    // in ProductController.java
     @GetMapping("/search")
-    public List<Product> searchProducts(@RequestParam String query) {
+    public List<ProductResponse> searchProducts(@RequestParam String query) {
         return productService.searchByName(query);
     }
 
+
     @GetMapping("/filter")
-    public List<Product> filterProducts(
+    public List<ProductResponse> filterProducts(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) Boolean inStock
+            @RequestParam(required = false) Boolean onlyInStock
     ) {
-        return productService.filterProducts(categoryId, minPrice, maxPrice, inStock);
+        return productService.filterProducts(categoryId, minPrice, maxPrice, onlyInStock);
     }
-
-    @GetMapping("/category/{categoryId}")
-    public List<Product> getProductsByCategory(@PathVariable Long categoryId) {
-        return productService.getProductsByCategory(categoryId);
-    }
-
 
     @PostMapping("/admin/add")
-    public Product addProduct(@RequestBody Product product) {
-        return productService.saveProduct(product);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ProductResponse createProduct(@RequestBody ProductRequest request) {
+        return productService.createProduct(request);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/update/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product updated) {
-        return productService.updateProduct(id, updated);
+    public ProductResponse updateProduct(@PathVariable Long id,
+                                         @RequestBody ProductRequest request) {
+        return productService.updateProduct(id, request);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
     }
 
+    @GetMapping("/category/{id}")
+    public List<ProductResponse> byCategory(@PathVariable("id") Long categoryId) {
+        return productService.getProductsByCategory(categoryId);
+    }
 }

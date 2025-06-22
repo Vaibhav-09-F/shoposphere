@@ -18,22 +18,17 @@ public class OrderController {
 
     @PostMapping("/place")
     public OrderResponse placeOrder(@RequestParam Long userId) {
-        return orderService.placeOrder(userId);   // now returns DTO
-    }
-
-    @GetMapping("/{userId}")
-    public List<OrderResponse> getOrders(@PathVariable Long userId) {
-        return orderService.getOrdersByUser(userId);  // returns list of DTOs
+        return orderService.placeOrder(userId);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<OrderOverviewResponse>> getMyOrders(@RequestParam Long userId) {
-        return ResponseEntity.ok(orderService.getUserOrders(userId));
+    public List<OrderOverviewResponse> getMyOrders(@RequestParam Long userId) {
+        return orderService.getOrdersByUser(userId);
     }
 
     @GetMapping("/admin/all")
-    public ResponseEntity<List<OrderOverviewResponse>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public List<OrderOverviewResponse> getAllOrders() {
+        return orderService.getAllOrders();
     }
 
 }
