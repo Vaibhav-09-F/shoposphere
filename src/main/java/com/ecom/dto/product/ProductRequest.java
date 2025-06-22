@@ -15,6 +15,7 @@ public class ProductRequest {
         this.description = description;
         this.price = price;
         this.stock = stock;
+        this.categoryId = categoryId;
     }
 
     // Getters and Setters

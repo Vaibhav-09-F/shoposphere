@@ -15,8 +15,8 @@ public class Address {
     private String country;
     private String postalCode;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     // Getters and setters

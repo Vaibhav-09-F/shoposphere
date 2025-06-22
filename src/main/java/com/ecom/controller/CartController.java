@@ -1,5 +1,6 @@
 package com.ecom.controller;
 
+import com.ecom.dto.cart.CartItemResponse;
 import com.ecom.model.CartItem;
 import com.ecom.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// src/main/java/com/ecom/controller/CartController.java
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
@@ -15,7 +17,7 @@ public class CartController {
     private CartService cartService;
 
     @PostMapping("/add")
-    public CartItem addToCart(
+    public CartItemResponse addToCart(
             @RequestParam Long userId,
             @RequestParam Long productId,
             @RequestParam int quantity
@@ -24,7 +26,7 @@ public class CartController {
     }
 
     @GetMapping("/{userId}")
-    public List<CartItem> getCartItems(@PathVariable Long userId) {
+    public List<CartItemResponse> getCartItems(@PathVariable Long userId) {
         return cartService.getCartItems(userId);
     }
 

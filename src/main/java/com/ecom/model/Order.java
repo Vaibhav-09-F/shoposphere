@@ -22,7 +22,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="order", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private List<OrderItem> items;
 
     // Getters and Setters

@@ -12,13 +12,10 @@ public class OrderItem {
 
     private double price;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch=FetchType.LAZY)
     private Product product;
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Order order;
 
     // Getters and Setters
 

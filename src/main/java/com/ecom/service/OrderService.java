@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OrderService {
     OrderResponse placeOrder(Long userId);
-    List<OrderResponse> getOrdersByUser(Long userId);
+    List<OrderOverviewResponse> getOrdersByUser(Long userId);
 
     List<OrderOverviewResponse> getUserOrders(Long userId);
     List<OrderOverviewResponse> getAllOrders(); // Admin-only

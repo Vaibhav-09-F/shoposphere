@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
 
     @Autowired private UserRepository userRepository;
@@ -59,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(totalAmount);
 
         Order saved = orderRepository.save(order);
-        orderItemRepository.saveAll(orderItems);
+        orderItemRepository.saveAll(order.getItems());
 
         cartItemRepository.deleteAll(cartItems);   // clear cart
 
@@ -69,13 +70,18 @@ public class OrderServiceImpl implements OrderService {
     // ---------- GET ORDERS BY USER ----------
     @Override
     @Transactional
-    public List<OrderResponse> getOrdersByUser(Long userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-        List<OrderResponse> responses = new ArrayList<>();
-        for (Order o : orders) {
-            responses.add(toResponse(o));
-        }
-        return responses;
+    public List<OrderOverviewResponse> getOrdersByUser(Long userId) {
+        return orderRepository.findByUserId(userId).stream()
+                .map(this::toOverviewDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public List<OrderOverviewResponse> getAllOrders() {
+        return orderRepository.findAll().stream()
+                .map(this::toOverviewDto)
+                .toList();
     }
 
     // ---------- ENTITY → DTO MAPPER ----------
@@ -102,12 +108,6 @@ public class OrderServiceImpl implements OrderService {
         return orders.stream().map(this::mapToOverviewResponse).collect(Collectors.toList());
     }
 
-    @Override
-    public List<OrderOverviewResponse> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
-        return orders.stream().map(this::mapToOverviewResponse).collect(Collectors.toList());
-    }
-
     private OrderOverviewResponse mapToOverviewResponse(Order order) {
         OrderOverviewResponse response = new OrderOverviewResponse();
         response.setOrderId(order.getId());
@@ -126,6 +126,29 @@ public class OrderServiceImpl implements OrderService {
 
         response.setItems(itemResponses);
         return response;
+    }
+
+    private OrderOverviewResponse toOverviewDto(Order order) {
+        OrderOverviewResponse dto = new OrderOverviewResponse();
+        dto.setOrderId(order.getId());
+        dto.setStatus(order.getStatus().name());
+        dto.setOrderDate(order.getOrderDate().toString());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setUserEmail(order.getUser().getEmail());
+
+        List<OrderItemResponse> items = order.getItems().stream()
+                .map(item -> {
+                    OrderItemResponse ir = new OrderItemResponse();
+                    ir.setProductId(item.getProduct().getId());        // ← SET productId
+                    ir.setProductName(item.getProduct().getName());
+                    ir.setQuantity(item.getQuantity());
+                    ir.setPrice(item.getPrice());
+                    return ir;
+                })
+                .toList();
+
+        dto.setItems(items);
+        return dto;
     }
 
 }

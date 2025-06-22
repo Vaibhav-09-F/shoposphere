@@ -20,10 +20,6 @@ public class CategoryServiceImpl implements CategoryService {
 
 //    private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
         Category category = new Category();
@@ -65,6 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         existing.setName(updatedCategory.getName());
+        existing.setDescription(updatedCategory.getDescription());
         return categoryRepository.save(existing);
     }
 
