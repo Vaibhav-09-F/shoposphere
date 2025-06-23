@@ -81,11 +81,13 @@ https://shoposphere.onrender.com
 
 2. **Set environment variables (replace placeholder values with your details):**
    
+```bash
 export JDBC_DATABASE_URL=jdbc:postgresql://your-db-host:5432/your-db-name
 export JDBC_DATABASE_USERNAME=your-username
 export JDBC_DATABASE_PASSWORD=your-password
 export jwt_secret=your_jwt_secret
 export jwt_expiration=86400000
+```
 
 4. **Build and run the application:**
    
@@ -94,40 +96,6 @@ export jwt_expiration=86400000
 Your server will start locally at:
 
 http://localhost:8080
-
----
-
-### Project Structure
-
-shoposphere
-
-├── src
-
-│   └── main
-
-│       ├── java
-
-│       │   └── com.ecom
-
-│       │       ├── controller
-
-│       │       ├── dto
-
-│       │       ├── model
-
-│       │       ├── repository
-
-│       │       ├── service
-
-│       │       └── config
-
-│       └── resources
-
-│           └── application.properties
-
-├── pom.xml
-
-└── README.md
 
 ---
 
