@@ -74,20 +74,25 @@ https://shoposphere.onrender.com
 ### Installation Steps
 
 1. **Clone the repository:**
+   
 ```bash
    git clone https://github.com/Vaibhav-09-F/shoposphere.git
 ```
 
 2. **Set environment variables (replace placeholder values with your details):**
+   
 export JDBC_DATABASE_URL=jdbc:postgresql://your-db-host:5432/your-db-name
 export JDBC_DATABASE_USERNAME=your-username
 export JDBC_DATABASE_PASSWORD=your-password
 export jwt_secret=your_jwt_secret
 export jwt_expiration=86400000
 
-3. **Build and run the application:**
+4. **Build and run the application:**
+   
 ./mvnw spring-boot:run
+
 Your server will start locally at:
+
 http://localhost:8080
 
 ---
@@ -95,19 +100,33 @@ http://localhost:8080
 ### Project Structure
 
 shoposphere
+
 ├── src
+
 │   └── main
+
 │       ├── java
+
 │       │   └── com.ecom
+
 │       │       ├── controller
+
 │       │       ├── dto
+
 │       │       ├── model
+
 │       │       ├── repository
+
 │       │       ├── service
+
 │       │       └── config
+
 │       └── resources
+
 │           └── application.properties
+
 ├── pom.xml
+
 └── README.md
 
 ---
@@ -115,11 +134,14 @@ shoposphere
 ### Authentication Endpoints
 
 - Register a new user (default role: USER):
+  
   ```bash
   curl -X POST https://shoposphere.onrender.com/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"John Doe","email":"john@example.com","password":"password"}'
+  
 - User login (receive JWT token):
+  
   ```bash
   curl -X POST https://shoposphere.onrender.com/api/auth/login \
   -H "Content-Type: application/json" \
